@@ -28,8 +28,7 @@ USA, 2020, doi: 10.23919/ACES49320.2020.9196194.
 """
 function generalized_cylinder_inductance(s, height::T; N = 1, μ_r = 1,
         ds = Base.Fix1(derivative, s), norm = norm, rtol = sqrt(eps(T)), atol = 0,
-        maxevals=typemax(Int), initdiv=1) where T<:Real
-
+        maxevals = typemax(Int), initdiv = 1) where {T <: Real}
     C = (μ_r * N^2 / height * T(4e-7))
 
     # Instead of integrating over (t1, t2) ∈ [0, 1]² , we wish to exploit symmetry and
