@@ -24,6 +24,6 @@ Calculate Nagaoka's coefficient for a circular, cylindrical inductor with diamet
 ratio `u`.
 """
 function nagaokas_coeff(u::T) where {T <: Real}
-    K, E = T.(ellipke(u^2 / (1 + u^2)))
-    return T(4 / 3π) * (sqrt(1 + u^2) * (K - E) / u^2 + sqrt(1 + u^2) * E - u)
+    K, E = T.(ellipke(u^2 / (one(T) + u^2)))
+    return T(4 / 3π) * (sqrt(one(T) + u^2) * (K - E) / u^2 + sqrt(one(T) + u^2) * E - u)
 end
