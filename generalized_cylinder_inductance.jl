@@ -33,7 +33,7 @@ function generalized_cylinder_inductance(
         ds = Base.Fix1(derivative, s),
         norm = norm,
         rtol = sqrt(eps(T)),
-        atol = 0,
+        atol = zero(T),
         maxevals = typemax(Int),
         initdiv = 1
 ) where {T <: Real}
@@ -50,7 +50,7 @@ function generalized_cylinder_inductance(
         zeros(T, 2),
         ones(T, 2);
         rtol,
-        atol = atol / C,
+        atol = T(atol / C),
         maxevals,
         initdiv
     )[1]
@@ -101,7 +101,7 @@ function generalized_cylinder_inductance_per_length(
         ds = Base.Fix1(derivative, s),
         norm = norm,
         rtol = sqrt(eps(T)),
-        atol = 0,
+        atol = zero(T),
         maxevals = typemax(Int),
         initdiv = 1
 ) where {T <: Real}
@@ -116,13 +116,13 @@ function generalized_cylinder_inductance_per_length(
             zero(T),
             t;
             rtol,
-            atol = atol / C,
+            atol = T(atol / C),
             maxevals,
             initdiv
         )[1]
     end
 
-    I2 = if t == zero(T)
+    I2 = if t == one(T)
         zero(T)
     else
         hquadrature(
@@ -130,7 +130,7 @@ function generalized_cylinder_inductance_per_length(
             t,
             one(T);
             rtol,
-            atol = atol / C,
+            atol = T(atol / C),
             maxevals,
             initdiv
         )[1]
