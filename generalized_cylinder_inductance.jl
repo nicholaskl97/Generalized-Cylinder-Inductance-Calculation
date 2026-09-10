@@ -107,12 +107,18 @@ function generalized_cylinder_inductance_per_length(
 ) where {T <: Real}
     C = (n^2 * height * T(2e-7))
 
+    # Package parameters
+    s_t = s(t)
+    dst = ds(t)
+    ŝ_t = dst ./ norm(dst)
+    p = (s_t, ŝ_t, s, ds, height)
+
     # Integrate over [0, t] and [t, 1] separately to avoid the singularity at τ = t.
     I1 = if t == zero(T)
         zero(T)
     else
         hquadrature(
-            Base.Fix2(inductance_per_length_integrand, (t, s, ds, height)),
+            Base.Fix2(inductance_per_length_integrand, p),
             zero(T),
             t;
             rtol,
@@ -126,7 +132,7 @@ function generalized_cylinder_inductance_per_length(
         zero(T)
     else
         hquadrature(
-            Base.Fix2(inductance_per_length_integrand, (t, s, ds, height)),
+            Base.Fix2(inductance_per_length_integrand, p),
             t,
             one(T);
             rtol,
@@ -140,11 +146,9 @@ function generalized_cylinder_inductance_per_length(
 end
 
 function inductance_per_length_integrand(τ, p)
-    t, s, ds, h = p
+    s_t, ŝ_t, s, ds, h = p
 
-    Δs = norm(s(t) .- s(τ))
-    dst = ds(t)
-    ŝ_t = dst ./ norm(dst)
+    Δs = norm(s_t .- s(τ))
 
     return (asinh(h / Δs) - h / (Δs + sqrt(h^2 + Δs^2))) * (ŝ_t ⋅ ds(τ))
 end
